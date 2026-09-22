@@ -7,7 +7,7 @@
 [![Vite](https://img.shields.io/badge/Vite-5.4+-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Tests](https://img.shields.io/badge/Tests-Pytest%20(18%2F18)%20%7C%20Vitest%20(9%2F9)-success)](backend/tests)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0%20(Agri--Public--Good)-green.svg)](LICENSE)
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?logo=vercel&logoColor=white)](https://grain-evac-dashboard.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?logo=vercel&logoColor=white)](https://grain-evac-platform.vercel.app)
 [![API](https://img.shields.io/badge/API-Render-46E3B7?logo=render&logoColor=white)](https://grain-evac-api.onrender.com/docs)
 
 > **A physics-informed, standalone software implementation of the Smart Grain Stack Evacuation Platform for open-air agricultural procurement yards (Direct Purchase Centres — DPCs) across Tamil Nadu.**
@@ -18,7 +18,7 @@
 
 | | URL |
 |---|---|
-| **Frontend (Dashboard)** | 🌐 [grain-evac-dashboard.vercel.app](https://grain-evac-dashboard.vercel.app) |
+| **Frontend (Dashboard)** | 🌐 [grain-evac-platform.vercel.app](https://grain-evac-platform.vercel.app) |
 | **Backend API** | ⚙️ [grain-evac-api.onrender.com](https://grain-evac-api.onrender.com) |
 | **API Docs (Swagger)** | 📄 [grain-evac-api.onrender.com/docs](https://grain-evac-api.onrender.com/docs) |
 
