@@ -1,0 +1,18 @@
+{
+  "name": "Smart Grain Stack Evacuation",
+  "short_name": "Grain Yard",
+  "description": "Outdoor yard console for Direct Purchase Centre stack evacuation.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#C5D0C8",
+  "theme_color": "#0C2F24",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

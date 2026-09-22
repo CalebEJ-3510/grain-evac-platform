@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Production builds
+dist/
+frontend/dist/
+.vite/
+
+# Python cache and environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+venv/
+.venv/
+env/
+ENV/
+
+# Database (runtime generated)
+*.db
+*.sqlite3
+backend/grain_evac.db
+
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+
+# IDE & Editor artifacts
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# Tool caches
+.monkeycode/
+*.log
