@@ -29,20 +29,20 @@ During harvesting seasons across the **Cauvery delta (Thanjavur, Tiruvarur, Naga
 The platform is structured into four decoupled, industrial-grade modules:
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                         GRAINEVAC PLATFORM                                              │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                      GRAINEVAC PLATFORM                                      │
+└──────────────────────────────────────────────────────────────────────────────────────────────┘
         │
         ▼
 ┌─────────────────────────┐      ┌──────────────────────────┐      ┌───────────────────────────┐
 │ MODULE 1                │      │ MODULE 2                 │      │ MODULE 3                  │
-│ Synthetic Telemetry     │ ───▶ │ Gateway Ingestion &     │ ───▶ │ EPI Engine & Dispatch     │
+│ Synthetic Telemetry     │ ───▶ │ Gateway Ingestion &      │ ───▶ │ EPI Engine & Dispatch     │
 │ Generator               │      │ State Reconstruction     │      │ Optimizer                 │
-│ • Chung–Pfost sorption  │      │ • Grid time-alignment    │      │ • 6 Physical Sub-indices  │
-│ • Diffusion lags        │      │ • 5-stage fault screen   │      │ • 0–100 Evacuation Index  │
+│ • Chung-Pfost sorption  │      │ • Grid time-alignment    │      │ • 6 Physical Sub-indices  │
+│ • Diffusion lags        │      │ • 5-stage fault screen   │      │ • 0-100 Evacuation Index  │
 │ • Biological hotspot    │      │ • Isotherm inversion     │      │ • Hard safety overrides   │
 │ • 10 Replay scenarios   │      │ • Mould Risk (MRA)       │      │ • AHP weight elicitation  │
-│ • Weather synthesizer   │      │ • Theil–Sen slope        │      │ • Precedence 2-opt DAG    │
+│ • Weather synthesizer   │      │ • Theil-Sen slope        │      │ • Precedence 2-opt DAG    │
 └─────────────────────────┘      └──────────────────────────┘      └───────────────────────────┘
                                                                                  │
                                                                                  ▼
