@@ -150,7 +150,7 @@ $$
 Calculates median pairwise slopes across the trailing 24 hours to ensure that transient surface condensation spikes cannot distort trend forecasting:
 
 $$
-\frac{dM}{dt} = \text{median}\left\{ \frac{M_j - M_i}{t_j - t_i} \;\middle|\; 1 \le i \lt j \le N \right\}
+\frac{dM}{dt} = \text{median}\left\{ \frac{M_j - M_i}{t_j - t_i} \;\middle|\; 1 \le i < j \le N \right\}
 $$
 
 ### 4. Evacuation Priority Index (EPI)
