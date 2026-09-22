@@ -17,7 +17,7 @@
 During harvesting seasons across the **Cauvery delta (Thanjavur, Tiruvarur, Nagapattinam)** and agrarian belts across India, millions of bags of freshly harvested paddy arrive at open-air **Direct Purchase Centres (DPCs)**. Stored outdoors in temporary stacks under tarpaulins while awaiting transport to state warehouses and rice mills, these grains face severe risks:
 
 - **Flash Monsoon Rains & High Humidity:** Rapid boundary wetting can elevate moisture above critical fungal thresholds within hours.
-- **Microbial Respiration & Biological Self-Heating:** Damp grain triggers rapid fungal colony proliferation (*Aspergillus*, *Penicillium*), initiating self-heating hotspots ($> 42^\circ\text{C}$) that destroy seed viability and produce carcinogenic aflatoxins.
+- **Microbial Respiration & Biological Self-Heating:** Damp grain triggers rapid fungal colony proliferation (*Aspergillus*, *Penicillium*), initiating self-heating hotspots (> 42°C) that destroy seed viability and produce carcinogenic aflatoxins.
 - **Physical Yard Bottlenecks & Truck Shortages:** Yard layouts have narrow aisles where front stacks physically block inner stacks. Daily truck quotas are strictly limited, making ad-hoc evacuation dispatch inefficient.
 
 **GrainEvac solves this challenge without requiring physical hardware.** Every physical sensor lance and LoRa mesh node is modeled by a **physically-honest synthetic telemetry generator** that simulates forward sorption thermodynamics, moisture diffusion lags, biological respiration, and sensor faults. Downstream modules ingest, filter, infer, score, and optimize evacuations exactly as if connected to live field sensors.
@@ -58,25 +58,25 @@ The platform is structured into four decoupled, industrial-grade modules:
 
 ### Module Breakdown
 1. **Module 1: Synthetic Telemetry Generator ("The Swarm that Doesn't Exist")**
-   - Implements forward **Modified Chung–Pfost sorption thermodynamics** to simulate interstitial relative humidity ($RH$) and temperature ($T$) across multiple depths (core, mid, boundary, base).
-   - Simulates physical moisture diffusion lags ($\tau = 2\text{--}4\text{h}$), ambient diurnal cycles, sensor noise, jittered timestamps ($\pm 0\text{--}90\text{s}$), and 10 scripted scenarios.
+   - Implements forward **Modified Chung–Pfost sorption thermodynamics** to simulate interstitial relative humidity (RH) and temperature (T) across multiple depths (core, mid, boundary, base).
+   - Simulates physical moisture diffusion lags (τ = 2–4h), ambient diurnal cycles, sensor noise, jittered timestamps (±0–90s), and 10 scripted scenarios.
 2. **Module 2: Gateway Ingestion & State Reconstruction ("The Gateway")**
    - 15-minute grid time-alignment.
    - **5-stage fault screening:** range plausibility check, zero-variance stuck-at freeze detector, rate-of-change outlier detection, and intra-stack robust median z-scores.
-   - Closed-form **Modified Chung–Pfost isotherm inversion** with sorption branch hysteresis (adsorption vs. desorption) to infer dry-basis and wet-basis grain moisture ($M_{est}$).
-   - **Mould Risk Accumulator (MRA):** 14-day numerical exposure integral tracking cumulative biological spoilage potential above safe water activity ($a_w \ge 0.70$).
-   - **Theil–Sen robust linear regression** over trailing 24 hours to estimate rate of moisture change ($dM/dt$) immune to transient condensation spikes.
+   - Closed-form **Modified Chung–Pfost isotherm inversion** with sorption branch hysteresis (adsorption vs. desorption) to infer dry-basis and wet-basis grain moisture (M_est).
+   - **Mould Risk Accumulator (MRA):** 14-day numerical exposure integral tracking cumulative biological spoilage potential above safe water activity (a_w ≥ 0.70).
+   - **Theil–Sen robust linear regression** over trailing 24 hours to estimate rate of moisture change (dM/dt) immune to transient condensation spikes.
 3. **Module 3: EPI Engine & Dispatch Optimizer ("The Brain")**
    - Synthesizes 6 normalized physical sub-indices:
-     - Moisture Risk ($s_M$)
-     - Moisture Trend ($s_R$)
-     - Core Temperature Spoilage ($s_T$)
-     - Stack Age & Turnover ($s_A$)
-     - Weather Forecast Vulnerability ($s_F$)
-     - Physical Yard Site Vulnerability ($s_V$)
+     - Moisture Risk (s_M)
+     - Moisture Trend (s_R)
+     - Core Temperature Spoilage (s_T)
+     - Stack Age & Turnover (s_A)
+     - Weather Forecast Vulnerability (s_F)
+     - Physical Yard Site Vulnerability (s_V)
    - Calculates 0–100 **Evacuation Priority Index (EPI)** mapped to 4 actionable operational bands: **Normal, Watch, Priority, Critical**.
-   - **Hard Safety Overrides:** If $M_{est} \ge 17.0\%$ or $MRA \ge 6.0\,a_w\cdot\text{h}$, automatically clamps $EPI \ge 90$ and triggers urgent alerts.
-   - **AHP Weight Elicitation Engine:** Validates Saaty's Analytic Hierarchy Process with Consistency Ratio checks ($CR < 0.10$) and $\pm 30\%$ sensitivity analysis.
+   - **Hard Safety Overrides:** If M_est ≥ 17.0% or MRA ≥ 6.0 a_w·h, automatically clamps EPI ≥ 90 and triggers urgent alerts.
+   - **AHP Weight Elicitation Engine:** Validates Saaty's Analytic Hierarchy Process with Consistency Ratio checks (CR < 0.10) and ±30% sensitivity analysis.
    - **Dispatch Optimizer:** Solves a daily truck capacity-constrained knapsack problem respecting yard aisle accessibility Directed Acyclic Graph (DAG) precedence constraints via 2-opt local search.
 4. **Module 4: High-Contrast Sunlight Outdoor Dashboard ("The Field UI")**
    - React 18, TypeScript, and Vite designed specifically for outdoor field supervisors using mid-range mobile devices in blinding sunlight.
@@ -108,28 +108,51 @@ The platform is structured into four decoupled, industrial-grade modules:
 ## 🔬 Mathematical Formulations
 
 ### 1. Modified Chung–Pfost Sorption Isotherm
-To infer moisture content $M$ from interstitial relative humidity ($RH$) and grain temperature ($T$ in $^\circ\text{C}$):
-$$RH = \exp\left[ -\frac{A}{T + C} \exp(-B \cdot M) \right]$$
+To infer moisture content $M$ from interstitial relative humidity ($RH$) and grain temperature ($T$ in °C):
+
+$$
+RH = \exp\left[ -\frac{A}{T + C} \exp(-B \cdot M) \right]
+$$
 
 Inverted analytically to recover dry-basis moisture $M$:
-$$M = -\frac{1}{B} \ln\left[ -\frac{T + C}{A} \ln(RH) \right]$$
+
+$$
+M = -\frac{1}{B} \ln\left[ -\frac{T + C}{A} \ln(RH) \right]
+$$
 
 - **Hysteresis Offset:** Adsorption ($A=502.8, B=16.5, C=41.5$) vs. Desorption ($A=591.4, B=16.8, C=35.7$).
 
 ### 2. Mould Risk Accumulator (MRA)
 Cumulative fungal growth exposure integral evaluated with trapezoidal quadrature over trailing 14 days:
-$$\text{MRA}(t) = \int_{t-14\text{d}}^{t} \max\left(0,\, a_w(\tau) - a_{w,\text{crit}}\right) \cdot k_T(T(\tau)) \, d\tau$$
-where $a_{w,\text{crit}} = 0.70$ and temperature acceleration follows Arrhenius kinetics normalized to $25^\circ\text{C}$:
-$$k_T(T) = Q_{10}^{(T - 25)/10}, \quad Q_{10} = 2.0$$
+
+$$
+\text{MRA}(t) = \int_{t - 14\,\text{days}}^{t} \max\left(0,\, a_w(\tau) - a_{w,\text{crit}}\right) \cdot k_T(T(\tau)) \, d\tau
+$$
+
+where $a_{w,\text{crit}} = 0.70$ and temperature acceleration follows Arrhenius kinetics normalized to 25°C:
+
+$$
+k_T(T) = Q_{10}^{(T - 25)/10}, \quad Q_{10} = 2.0
+$$
 
 ### 3. Theil–Sen Robust Rate of Change ($dM/dt$)
 Calculates median pairwise slopes across the trailing 24 hours to ensure that transient surface condensation spikes cannot distort trend forecasting:
-$$\frac{dM}{dt} = \text{median}\left\{ \frac{M_j - M_i}{t_j - t_i} \;\middle|\; 1 \le i < j \le N \right\}$$
+
+$$
+\frac{dM}{dt} = \text{median}\left\{ \frac{M_j - M_i}{t_j - t_i} \;\middle|\; 1 \le i \lt j \le N \right\}
+$$
 
 ### 4. Evacuation Priority Index (EPI)
-$$\text{EPI} = 100 \times \sum_{i \in \{M, R, T, A, F, V\}} w_i \cdot s_i$$
+
+$$
+\text{EPI} = 100 \times \sum_{i \in \{M, R, T, A, F, V\}} w_i \cdot s_i
+$$
+
 Subject to hard safety clamp:
-$$\text{If } M_{est} \ge 17.0\% \text{ or } \text{MRA} \ge 6.0\,a_w\cdot\text{h} \implies \text{EPI} \leftarrow \max(\text{EPI}, 90)$$
+
+$$
+M_{\text{est}} \ge 17.0\% \quad\text{or}\quad \text{MRA} \ge 6.0\,a_w\cdot\text{h} \implies \text{EPI} \leftarrow \max(\text{EPI}, 90)
+$$
 
 ---
 
@@ -139,15 +162,15 @@ The simulator includes 10 deterministic, scientifically grounded scenarios to va
 
 | Scenario Name | Physical Phenomenon | Pipeline & UI Response |
 |---|---|---|
-| `baseline_stable` | Sheltered grain, calm ambient conditions | Moisture $< 14\%$; EPI remains in Normal green band throughout. |
-| `slow_monsoon_wetting` | Ambient RH climbs to 95% over 5–7 days with rain | $s_M$ and $s_R$ rise; EPI moves Normal $\to$ Watch $\to$ Priority with $>48\text{h}$ lead time. |
-| `core_hotspot` | Deep-core fungal respiration self-heating | Core $T$ climbs to $42^\circ\text{C}$; $s_T$ spikes ($>0.7$) while surface moisture stays low. |
-| `flash_rain_event` | Heavy convective storm ($65\text{mm}$, $p_{rain}=0.95$) | Forecast risk $s_F \to 1.0$ immediately ahead of actual wetting front. |
+| `baseline_stable` | Sheltered grain, calm ambient conditions | Moisture < 14%; EPI remains in Normal green band throughout. |
+| `slow_monsoon_wetting` | Ambient RH climbs to 95% over 5–7 days with rain | s_M and s_R rise; EPI moves Normal → Watch → Priority with > 48h lead time. |
+| `core_hotspot` | Deep-core fungal respiration self-heating | Core T climbs to 42°C; s_T spikes (> 0.7) while surface moisture stays low. |
+| `flash_rain_event` | Heavy convective storm (65mm, p_rain = 0.95) | Forecast risk s_F → 1.0 immediately ahead of actual wetting front. |
 | `sensor_condensation_fault` | Dewpoint crossing pins RH sensor at 99.8% | Fault screening detects step anomaly; node isolated; prevents false Critical alarm. |
 | `stuck_at_fault` | ADC failure causing zero variance over 6h | Stuck-at detector demotes node; stack relies on remaining healthy median. |
-| `node_dropout` | Lance cable severed / radio transceiver lost | Node marked offline; if surviving healthy nodes $n_{ok} < 2$, trips inspection alert. |
-| `high_vulnerability_static` | Compromised tarpaulin & low elevation in dry weather | Static vulnerability $s_V \ge 0.9$ elevates stack to Watch before weather arrives. |
-| `override_breach` | Flood inundation pushing $M \ge 17.0\%$ or $\text{MRA} \ge 6.0$ | Hard safety override triggers ($EPI \ge 90$); immediately dispatches simulated SMS. |
+| `node_dropout` | Lance cable severed / radio transceiver lost | Node marked offline; if surviving healthy nodes n_ok < 2, trips inspection alert. |
+| `high_vulnerability_static` | Compromised tarpaulin & low elevation in dry weather | Static vulnerability s_V ≥ 0.9 elevates stack to Watch before weather arrives. |
+| `override_breach` | Flood inundation pushing M ≥ 17.0% or MRA ≥ 6.0 | Hard safety override triggers (EPI ≥ 90); immediately dispatches simulated SMS. |
 | `season_replay` | Multi-week season across 12 stacks with truck contention | Evaluates DAG precedence, 2-opt capacity optimization, and Precision@6 metrics. |
 
 ---
@@ -200,12 +223,12 @@ Both test suites can be executed independently to verify scientific formulations
 python -m pytest backend/tests -v
 ```
 Validates:
-- Modified Chung–Pfost sorption isotherm round-trip inversion ($M \to RH \to M$) across both branches ($< 0.05\%wb$ error)
-- Mould Risk Accumulator (MRA) worked examples at $25^\circ\text{C}$ and $35^\circ\text{C}$
+- Modified Chung–Pfost sorption isotherm round-trip inversion ($M \to RH \to M$) across both branches (< 0.05%wb error)
+- Mould Risk Accumulator (MRA) worked examples at 25°C and 35°C
 - Theil–Sen slope resistance against transient condensation outliers
-- Sub-index boundary clamping ($[0.0, 1.0]$) and hard safety override rules
+- Sub-index boundary clamping ([0.0, 1.0]) and hard safety override rules
 - Precedence DAG resolution and knapsack truck capacity constraints
-- Fault screening and $n_{ok} < 2$ inspection alerts
+- Fault screening and n_ok < 2 inspection alerts
 
 ### Frontend Component Tests (Vitest)
 ```powershell
@@ -228,7 +251,10 @@ The frontend is a Vite Single-Page Application (SPA) ready for 1-click deploymen
 ### Option 1: Frontend on Vercel + Backend on Persistent Host (Recommended)
 Since the FastAPI backend maintains an in-memory simulation clock loop and persistent WebSockets:
 1. **Deploy Backend:** Deploy `backend/` to a persistent container service such as **Render**, **Railway**, **Fly.io**, or **Koyeb**:
-   - Start command: `uvicorn backend.main:app --host 0.0.0.0 --port $PORT`
+   - Start command:
+     ```bash
+     uvicorn backend.main:app --host 0.0.0.0 --port 8000
+     ```
 2. **Deploy Frontend to Vercel:**
    - Push your code to GitHub.
    - Go to [Vercel Dashboard](https://vercel.com/new) $\to$ **Import Repository**.
