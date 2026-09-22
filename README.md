@@ -28,32 +28,29 @@ During harvesting seasons across the **Cauvery delta (Thanjavur, Tiruvarur, Naga
 
 The platform is structured into four decoupled, industrial-grade modules:
 
-```
-┌──────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                      GRAINEVAC PLATFORM                                      │
-└──────────────────────────────────────────────────────────────────────────────────────────────┘
-        │
-        ▼
-┌─────────────────────────┐      ┌──────────────────────────┐      ┌───────────────────────────┐
-│ MODULE 1                │      │ MODULE 2                 │      │ MODULE 3                  │
-│ Synthetic Telemetry     │ ───▶ │ Gateway Ingestion &      │ ───▶ │ EPI Engine & Dispatch     │
-│ Generator               │      │ State Reconstruction     │      │ Optimizer                 │
-│ • Chung-Pfost sorption  │      │ • Grid time-alignment    │      │ • 6 Physical Sub-indices  │
-│ • Diffusion lags        │      │ • 5-stage fault screen   │      │ • 0-100 Evacuation Index  │
-│ • Biological hotspot    │      │ • Isotherm inversion     │      │ • Hard safety overrides   │
-│ • 10 Replay scenarios   │      │ • Mould Risk (MRA)       │      │ • AHP weight elicitation  │
-│ • Weather synthesizer   │      │ • Theil-Sen slope        │      │ • Precedence 2-opt DAG    │
-└─────────────────────────┘      └──────────────────────────┘      └───────────────────────────┘
-                                                                                 │
-                                                                                 ▼
-                                                                   ┌───────────────────────────┐
-                                                                   │ MODULE 4                  │
-                                                                   │ Sunlight Outdoor UI       │
-                                                                   │ • 6 High-contrast screens │
-                                                                   │ • Tamil / English switch  │
-                                                                   │ • Alert ladder & SMS      │
-                                                                   │ • Offline cache (Indexed) │
-                                                                   └───────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph GrainEvac ["🌾 GrainEvac Platform Architecture"]
+        direction TB
+
+        M1["<b>MODULE 1: Synthetic Telemetry Generator</b><br/>• Forward Chung-Pfost sorption thermodynamics<br/>• Moisture diffusion lags (τ = 2–4h) & sensor noise<br/>• Biological fungal respiration & hotspot self-heating<br/>• 10 Scripted replay scenarios & weather synthesizer"]
+
+        M2["<b>MODULE 2: Gateway & State Reconstruction</b><br/>• 15-minute grid time-alignment<br/>• 5-stage fault screening (stuck-at, jumps, median z-scores)<br/>• Closed-form isotherm inversion with branch hysteresis<br/>• Mould Risk Accumulator (MRA) 14-day exposure integral<br/>• Trailing 24h Theil-Sen robust slope regression (dM/dt)"]
+
+        M3["<b>MODULE 3: EPI Engine & Dispatch Optimizer</b><br/>• Six physical sub-indices: Moisture, Trend, Heat, Age, Forecast, Site<br/>• 0–100 Evacuation Priority Index (EPI) mapped to 4 triage bands<br/>• Hard safety overrides (M ≥ 17% or MRA ≥ 6.0 ⇒ EPI ≥ 90)<br/>• Versioned AHP weight elicitation engine (CR &lt; 0.10)<br/>• Precedence-constrained 2-opt DAG knapsack dispatch optimizer"]
+
+        M4["<b>MODULE 4: High-Contrast Sunlight Outdoor Dashboard</b><br/>• 6 Screens: Yard Plan, Loading Queue, Stack Detail, Node Health, Season Report, Settings<br/>• Full bilingual Tamil (தமிழ்) and English localization<br/>• Tiered alert ladder with dwell hysteresis & simulated SMS dispatch<br/>• Offline local-first snapshot caching"]
+
+        M1 -->|15-min Telemetry Stream| M2
+        M2 -->|Fused State Records & Moisture Inversion| M3
+        M3 -->|Optimized Evacuation Queue & Active Alerts| M4
+    end
+
+    style GrainEvac fill:#0b132b,stroke:#3a506b,stroke-width:2px,color:#ffffff
+    style M1 fill:#1c2541,stroke:#48cae4,stroke-width:1.5px,color:#ffffff
+    style M2 fill:#1c2541,stroke:#48cae4,stroke-width:1.5px,color:#ffffff
+    style M3 fill:#1c2541,stroke:#48cae4,stroke-width:1.5px,color:#ffffff
+    style M4 fill:#0b3c2e,stroke:#2ec4b6,stroke-width:2px,color:#ffffff
 ```
 
 ### Module Breakdown
