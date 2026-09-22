@@ -36,7 +36,7 @@ The platform is structured into four decoupled, industrial-grade modules:
         ▼
 ┌─────────────────────────┐      ┌──────────────────────────┐      ┌───────────────────────────┐
 │ MODULE 1                │      │ MODULE 2                 │      │ MODULE 3                  │
-│ Synthetic Telemetry     │ ───▶│ Gateway Ingestion &      │ ───▶ │ EPI Engine & Dispatch     │
+│ Synthetic Telemetry     │ ───▶ │ Gateway Ingestion &     │ ───▶ │ EPI Engine & Dispatch     │
 │ Generator               │      │ State Reconstruction     │      │ Optimizer                 │
 │ • Chung–Pfost sorption  │      │ • Grid time-alignment    │      │ • 6 Physical Sub-indices  │
 │ • Diffusion lags        │      │ • 5-stage fault screen   │      │ • 0–100 Evacuation Index  │
